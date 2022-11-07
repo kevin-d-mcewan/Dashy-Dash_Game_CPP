@@ -11,19 +11,27 @@ int main(int argc, char const *argv[])
 
   // acceleration due to gravity (pixels/frame)/frame
   const int gravity{1};
-  const int jumpVelo{-18};
+  
 
-  // Rectangle Dimensions (player)
-  const int width{50};
-  const int height{80};
+  // Sprite Variables:
+  Texture2D scarfy = LoadTexture("textures/scarfy.png");
+  Rectangle scarfyRec;
+  scarfyRec.width = scarfy.width / 6;
+  scarfyRec.height = scarfy.height;
+  scarfyRec.x = 0;
+  scarfyRec.y = 0;
+  Vector2 scarfyPos;
+  scarfyPos.x = windowWidth / 2 - scarfyRec.width / 2;
+  scarfyPos.y = windowHeight - scarfyRec.height;
 
-  //  y-pos for Rectangle (be placed on "ground")  must minus height from char bc total dimension of window is full pix of 540
-  int posY{windowHeight - height};
   // to fly upward must go in the negative direction from og start point THIS IS INTIALIZE  VELO
   int velocity{0}; 
 
   // Check to see if already in air.
   bool isInAir{false};
+
+  // Jump Velocity.
+  const int jumpVelo{-18};
 
   // Game Variables
   SetTargetFPS(60);
@@ -34,16 +42,16 @@ int main(int argc, char const *argv[])
       // Game Logic Begins
       BeginDrawing();
       
-      ClearBackground(WHITE);
+      ClearBackground(BLUE);
 
 
       // ground check
-      if (posY >= windowHeight - height)
+      if (scarfyPos.y >= windowHeight - scarfyRec.height)
       {
         /* Rectangle is on ground */
         
           isInAir = false;
-         velocity = 0;
+          velocity = 0;
       }
       else
       {
@@ -66,14 +74,17 @@ int main(int argc, char const *argv[])
       
 
       // Update Velocity
-      posY += velocity;
-      DrawRectangle(windowWidth/2, posY, width, height, BLUE);
+      scarfyPos.y += velocity;
       
+      // Drawing the scarfMan sprite to window.
+      DrawTextureRec(scarfy, scarfyRec, scarfyPos, WHITE);
 
       EndDrawing();
       // Game Logic Ends
     }
 
+  // To close things properly must "unloadTexture" before closing down program
+  UnloadTexture(scarfy);
   // Raylib function to ensure window closes properly
   CloseWindow();
 
