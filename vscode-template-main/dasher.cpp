@@ -9,8 +9,8 @@ int main(int argc, char const *argv[])
   // Initialize the Game Window 
   InitWindow(windowWidth, windowHeight, "Dashy Dash");
 
-  // acceleration due to gravity (pixels/frame)/frame
-  const int gravity{1};
+  // acceleration due to gravity (pixels/sec)/sec
+  const int gravity{1000};
   
 
   // Sprite Variables:
@@ -30,9 +30,10 @@ int main(int argc, char const *argv[])
   // Check to see if already in air.
   bool isInAir{false};
 
-  // Jump Velocity.
-  const int jumpVelo{-18};
+  // Jump Velocity (pixels/sec).
+  const int jumpVelo{-475};
 
+  
   // Game Variables
   SetTargetFPS(60);
 
@@ -44,6 +45,9 @@ int main(int argc, char const *argv[])
       
       ClearBackground(BLUE);
 
+      // delta time (time since last frame)
+      const float dt{GetFrameTime()};
+      
 
       // ground check
       if (scarfyPos.y >= windowHeight - scarfyRec.height)
@@ -57,7 +61,7 @@ int main(int argc, char const *argv[])
       {
         // Rectangle is in air 
         // Apply gravity.
-        velocity += gravity;
+        velocity += gravity * dt;
         isInAir = true;
       }
 
@@ -74,7 +78,7 @@ int main(int argc, char const *argv[])
       
 
       // Update Velocity
-      scarfyPos.y += velocity;
+      scarfyPos.y += velocity * dt;
       
       // Drawing the scarfMan sprite to window.
       DrawTextureRec(scarfy, scarfyRec, scarfyPos, WHITE);
